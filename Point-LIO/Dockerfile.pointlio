@@ -1,0 +1,57 @@
+FROM ros:noetic-ros-base-focal
+
+ENV DEBIAN_FRONTEND=noninteractive
+SHELL ["/bin/bash", "-c"]
+
+RUN apt-get update && apt-get install -y \
+    git \
+    vim \
+    nano \
+    tmux \
+    wget \
+    curl \
+    ca-certificates \
+    build-essential \
+    cmake \
+    pkg-config \
+    python3-pip \
+    python3-catkin-tools \
+    python3-rosdep \
+    python3-osrf-pycommon \
+    ros-noetic-pcl-ros \
+    ros-noetic-pcl-conversions \
+    ros-noetic-tf \
+    ros-noetic-eigen-conversions \
+    ros-noetic-geometry-msgs \
+    ros-noetic-nav-msgs \
+    ros-noetic-sensor-msgs \
+    ros-noetic-std-msgs \
+    ros-noetic-roscpp \
+    ros-noetic-rospy \
+    ros-noetic-rviz \
+    ros-noetic-cv-bridge \
+    ros-noetic-tf2 \
+    ros-noetic-tf2-ros \
+    ros-noetic-tf2-eigen \
+    ros-noetic-message-generation \
+    ros-noetic-message-runtime \
+    ros-noetic-rosbag \
+    libeigen3-dev \
+    libboost-all-dev \
+    libyaml-cpp-dev \
+    libusb-1.0-0-dev \
+    pcl-tools \
+    libgoogle-glog-dev \
+    libgflags-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN rosdep init || true
+RUN rosdep update || true
+
+RUN mkdir -p /root/catkin_ws/src
+WORKDIR /root/catkin_ws
+
+RUN echo "source /opt/ros/noetic/setup.bash" >> /root/.bashrc && \
+    echo "source /root/catkin_ws/devel/setup.bash 2>/dev/null || true" >> /root/.bashrc
+
+CMD ["/bin/bash"]
